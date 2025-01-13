@@ -3,7 +3,7 @@ const widget = new ListWidget();
 widget.backgroundColor = new Color("#1a1a1a");
 
 // Títulos
-const title = widget.addText("Tarjetas 💳");
+const title = widget.addText("Tarjetas BNA 💳");
 title.textColor = Color.white();
 title.font = Font.boldSystemFont(22);
 title.centerAlignText();
@@ -102,6 +102,7 @@ function storeDate(key, value) {
 function isDateNegative(date) {
   const targetDate = new Date(date);
   const today = new Date();
+  today.setHours(0, 0, 0, 0); // Ignorar horas en el cálculo
   return targetDate < today;
 }
 
@@ -112,6 +113,9 @@ function formatDateWithDaysRemaining(date, calculateDays) {
   const targetDate = new Date(date);
   if (isNaN(targetDate.getTime())) return { formattedDate: "Formato inválido", daysRemaining: null };
 
+  // Ajustar la zona horaria para evitar desajustes de un día
+  targetDate.setMinutes(targetDate.getMinutes() + targetDate.getTimezoneOffset());
+
   // Formatear fecha como "DD/MM"
   const day = targetDate.getDate().toString().padStart(2, "0");
   const month = (targetDate.getMonth() + 1).toString().padStart(2, "0");
@@ -120,6 +124,7 @@ function formatDateWithDaysRemaining(date, calculateDays) {
 
   // Calcular días restantes
   const today = new Date();
+  today.setHours(0, 0, 0, 0); // Ignorar horas en el cálculo
   const diffTime = targetDate - today;
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
